@@ -42,3 +42,15 @@ let runConfig fileName  =
         printfn "FsiEvaluationSession could not be created."
         
         raise exn    
+
+// TODO make this correct        
+let merge (config1:Dictionary<string,string>) (config2:Dictionary<string,string>) =
+
+    let config = Dictionary<string,string>()
+    for x in config1 do
+      config.Add(x.Key,x.Value)
+    
+    for x in config2 do
+      config.[x.Key] <- x.Value
+
+    config
