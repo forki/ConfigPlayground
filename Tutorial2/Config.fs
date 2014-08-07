@@ -54,3 +54,5 @@ let merge (config1:Dictionary<string,string>) (config2:Dictionary<string,string>
       config.[x.Key] <- x.Value
 
     config
+
+let (==>) c1 c2 = merge c1 c2

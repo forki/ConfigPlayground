@@ -1,7 +1,8 @@
-﻿let config = ConfigDSL.runConfig "myConfig.fsx"
-let config2 = ConfigDSL.runConfig "myConfig2.fsx"
+﻿open ConfigDSL
 
-let completeConfig = ConfigDSL.merge config config2
+let completeConfig = 
+    runConfig "myConfig.fsx"
+     ==> runConfig "myConfig2.fsx"
 
 for x in completeConfig do
     printfn "%s => %s" x.Key x.Value
