@@ -5,6 +5,13 @@ open System.IO
 open System.Collections.Generic
 open Microsoft.FSharp.Compiler.Interactive.Shell
 
+let initialCode = """
+let config = new System.Collections.Generic.Dictionary<string,string>()
+let source x = ()  // Todo
+
+let nuget x y = config.Add(x,y)
+"""
+
 let runConfig fileName  =
     let fsiConfig = FsiEvaluationSession.GetDefaultConfiguration()
 
@@ -19,12 +26,16 @@ let runConfig fileName  =
     
     try
         let session = FsiEvaluationSession.Create(fsiConfig, commonOptions, stdin, outStream, errStream)
-        session.EvalExpression("let source x = 22") |> ignore
-
+       
         try 
-            session.EvalScript fileName            
+            
+            session.EvalInteraction initialCode |> ignore                    
+            session.EvalScript fileName
+            match session.EvalExpression "config" with
+            | Some x -> x.ReflectionValue :?> System.Collections.Generic.Dictionary<string,string>
+            | _ -> failwithf "Error: %s" <| sbErr.ToString()
         with    
-        | _ -> printfn "Error: %s" <| sbErr.ToString()
+        | _ -> failwithf "Error: %s" <| sbErr.ToString()
             
     with    
     | exn ->
